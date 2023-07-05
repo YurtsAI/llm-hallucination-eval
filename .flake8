@@ -1,0 +1,10 @@
+[flake8]
+max-line-legnth = 127
+max-complexity = 10
+extend-ignore =
+# Line too long (82 > 79 characters)
+  E501,
+# Line break before binary operator.
+  W503,
+# Line break after binary operator.
+  W504

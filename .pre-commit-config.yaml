@@ -1,0 +1,83 @@
+repos:
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-ast
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: check-docstring-first
+      - id: check-added-large-files
+        exclude: 'res/.*'
+      - id: debug-statements
+      - id: double-quote-string-fixer
+      - id: end-of-file-fixer
+      # - id: name-tests-test
+      - id: trailing-whitespace
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-use-type-annotations
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.1.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all, typing_extensions]
+
+  - repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v2.0.2
+    hooks:
+      - id: autopep8
+        args: [--diff, --max-line-length=120, --aggressive]
+
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.5.1
+    hooks:
+      - id: docformatter
+        additional_dependencies: [tomli]
+
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        additional_dependencies: [tomli]
+        # args: [src]
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: [--extend-ignore, "E501,W503,W504,C901"]
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.3.1
+    hooks:
+      - id: pyupgrade
+        args: [--py310-plus]
+
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v3.9.0
+    hooks:
+      - id: reorder-python-imports
+        args: [--py310-plus]
+
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v2.4.0
+    hooks:
+      - id: add-trailing-comma
+        args: [--py36-plus]
+
+  - repo: https://github.com/python-poetry/poetry
+    rev: 1.4.0
+    hooks:
+      - id: poetry-check
+      # - id: poetry-lock
+      #   args ["--no-update"]
+      #   # export main dependencies.
+      # - id: poetry-export
+      #   args: ["-f", "requirements.txt", "-o", "requirements.txt", "--only", "main", "--without-hashes", "--without-urls"]
+      #   # export dev-dependencies.
+      #   args: ["-f", "requirements.txt", "-o", "requirements-dev.txt", "--only", "dev,test", "--without-hashes", "--without-urls"]
