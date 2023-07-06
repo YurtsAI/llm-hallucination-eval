@@ -1,3 +1,4 @@
+# mypy: disable-error-code="union-attr"
 import os
 from itertools import islice
 from typing import Any
@@ -14,33 +15,31 @@ DEFAULT_PROMPT: str = 'Facts: {}\nTell me more about {} using ONLY the facts abo
 def load_data(
     name_or_path: str,
     limit: int | None = None,
+    is_hf_hub: bool = False,
 ) -> Dataset:
     """Load data from the data directory or HuggingFace Hub name/path.
 
     Args:
         name_or_path (str): The name or path of the dataset to load.
+        limit (int, optional): The maximum number of examples to load from the dataset.
+            Defaults to None.
+        is_hf_hub (bool, optional): Whether the dataset is from the HuggingFace Hub.
+            Defaults to False.
 
     Returns:
         Dataset: The loaded dataset.
 
     """
-    is_hf_hub = False
-
-    if not os.path.exists(name_or_path):
-        msg = (
+    if not os.path.exists(name_or_path) and not is_hf_hub:
+        raise FileNotFoundError(
             f'Dataset {name_or_path} not found. '
             'Please make sure you have the dataset downloaded or '
-            'pass a valid dataset name from the HuggingFace Hub.'
+            'pass a valid dataset name from the HuggingFace Hub.',
         )
-        if len(name_or_path.split('/')) == 2:
-            is_hf_hub = True
-            if not is_hf_hub:
-                raise FileNotFoundError(msg)
-        else:
-            raise FileNotFoundError(msg)
 
     # TODO(victor-iyi): Implement loading from HuggingFace Hub
     if is_hf_hub:
+        # Loading from HuggingFace Hub is not yet implemented.
         return NotImplemented
 
     # Load data from the data directory.
@@ -61,17 +60,18 @@ def load_data(
 
 def pre_process(
     ds: Dataset,
-    prompt: str = DEFAULT_PROMPT,
+    prompt_format: str | None = None,
     token_format: str | None = None,
     tokenizer: AutoTokenizer | None = None,
     max_length: int = 1024,
+    num_proc: int | None = None,
     **tokenizer_kwargs: Any,
 ) -> Dataset:
     """Pre-process a dataset for hallucination evaluation with LLM.
 
     Args:
         ds (Dataset): The dataset to add the prompt to.
-        prompt (str, optional): The prompt to add to the context.
+        prompt_format (str, optional): The prompt to add to the context.
             Defaults to ``DEFAULT_PROMPT``.
         token_format (str, optional): The format of the prompt to use for the LLM.
             Defaults to None.
@@ -80,6 +80,8 @@ def pre_process(
             Defaults to None.
         max_length (int, optional): The maximum length of the prompt.
             Defaults to 1024.
+        num_proc (int, optional): The number of processes to use for multiprocessing.
+            Defaults to None.
 
     Keyword Args:
         tokenizer_kwargs (Any): Additional keyword arguments to pass to the tokenizer.
@@ -88,9 +90,12 @@ def pre_process(
         Dataset: The dataset with the prompt added to the context.
 
     """
-    def _add_prompt(example: dict[str, Any]) -> dict[str, Any]:
+    if prompt_format is None:
+        prompt_format = DEFAULT_PROMPT
+
+    def _map_fn(example: dict[str, Any]) -> dict[str, Any]:
         # Add the natural language prompt to the context.
-        example['prompt'] = prompt.format(example['context'], example['question'])
+        example['prompt'] = prompt_format.format(example['context'], example['question'])
 
         # Add special tokens to the NL prompt.
         if token_format is not None:
@@ -111,8 +116,8 @@ def pre_process(
 
         return example
     ds = ds.map(
-        _add_prompt,
-        # remove_columns=['context', 'question'],
+        _map_fn,
+        num_proc=num_proc,
     )
     return ds
 

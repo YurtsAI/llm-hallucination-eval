@@ -24,6 +24,14 @@ class LLMArguments:
         metadata={'help': 'The name or path of the tokenizer to use.'},
     )
 
+    padding_side: str | None = field(
+        default=None,
+        metadata={
+            'help': 'The side to pad on (left or right).',
+            'choices': ['left', 'right'],
+        },
+    )
+
     save_path: str = field(
         default='res/eval/',
         metadata={'help': 'The path to save the evaluation results.'},
@@ -34,14 +42,34 @@ class LLMArguments:
         metadata={'help': 'The maximum number of examples to load from the dataset.'},
     )
 
+    batch_size: int = field(
+        default=8,
+        metadata={'help': 'The batch size to use for evaluation.'},
+    )
+
+    shuffle: bool = field(
+        default=False,
+        metadata={'help': 'Whether to shuffle the dataset.'},
+    )
+
     prompt_format: str | None = field(
         default=None,
         metadata={'help': 'The format of the prompt to use for the LLM.'},
     )
 
-    max_legnth: int = field(
-        default=1024,
+    special_token_format: str | None = field(
+        default=None,
+        metadata={'help': 'The format of the special tokens to use for the LLM.'},
+    )
+
+    max_length: int = field(
+        default=2048,
         metadata={'help': 'The maximum length of the prompt.'},
+    )
+
+    num_proc: int | None = field(
+        default=None,
+        metadata={'help': 'The number of processes to use for multiprocessing.'},
     )
 
     use_pipeline: bool = field(

@@ -14,8 +14,8 @@ from transformers import PreTrainedModel
 def evaluate(
     model: PreTrainedModel | Pipeline,
     loader: DataLoader[dict[str, str]],
-    tokenizer: AutoTokenizer,
     save_path: str,
+    tokenizer: AutoTokenizer | None = None,
     use_pipeline: bool = False,
     compute_reward: bool = False,
     **gen_kwargs: Any,
