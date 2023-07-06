@@ -4,6 +4,7 @@ from typing import Any
 
 import jsonlines
 from datasets import Dataset
+from transformers import AutoTokenizer
 
 
 # Default prompt to use for the LLM.
@@ -58,12 +59,15 @@ def load_data(
     return ds
 
 
-def add_prompt(
+def pre_process(
     ds: Dataset,
     prompt: str = DEFAULT_PROMPT,
     token_format: str | None = None,
+    tokenizer: AutoTokenizer | None = None,
+    max_length: int = 1024,
+    **tokenizer_kwargs: Any,
 ) -> Dataset:
-    """Add a prompt to the context of each example in the dataset.
+    """Pre-process a dataset for hallucination evaluation with LLM.
 
     Args:
         ds (Dataset): The dataset to add the prompt to.
@@ -71,18 +75,39 @@ def add_prompt(
             Defaults to ``DEFAULT_PROMPT``.
         token_format (str, optional): The format of the prompt to use for the LLM.
             Defaults to None.
+        tokenizer (AutoTokenizer, optional): The tokenizer to use to tokenize the
+            prompt.
+            Defaults to None.
+        max_length (int, optional): The maximum length of the prompt.
+            Defaults to 1024.
+
+    Keyword Args:
+        tokenizer_kwargs (Any): Additional keyword arguments to pass to the tokenizer.
 
     Returns:
         Dataset: The dataset with the prompt added to the context.
 
     """
     def _add_prompt(example: dict[str, Any]) -> dict[str, Any]:
+        # Add the natural language prompt to the context.
         example['prompt'] = prompt.format(example['context'], example['question'])
 
+        # Add special tokens to the NL prompt.
         if token_format is not None:
             example['prompt'] = token_format.format(example['prompt'])
         else:
             example['prompt'] = f'{example["prompt"]}\nAnswer: '
+
+        # Tokenize the prompt.
+        if tokenizer is not None:
+            example['input_ids'] = tokenizer(
+                example['prompt'],
+                return_tensors='pt',
+                max_length=max_length,
+                padding='max_length',
+                truncation=True,
+                **tokenizer_kwargs,
+            )['input_ids']
 
         return example
     ds = ds.map(
@@ -96,6 +121,6 @@ if __name__ == '__main__':
     ds = load_data('res/data/tech-crunch.jsonl')
     print(ds)
 
-    ds = add_prompt(ds, token_format='<|prompter|>{}<|endoftext|><|assistant|>')
+    ds = pre_process(ds, token_format='<|prompter|>{}<|endoftext|><|assistant|>')
     print(ds)
     print(ds[0])
