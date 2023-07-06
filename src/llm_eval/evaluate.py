@@ -50,7 +50,6 @@ def evaluate(
             else:
                 input_ids = torch.tensor(batch['input_ids'], dtype=torch.int64, device=device)
                 input_ids = input_ids.view(-1, input_ids.shape[-1])
-                logging.info(f'{input_ids.shape = }')
                 responses = generate_with_model(
                     model=model,
                     tokenizer=tokenizer,

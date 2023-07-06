@@ -3,6 +3,41 @@
 [YurtsAI][yurtsai] developed a pipeline to evaluate the famous hallucination
 problem of large language models.
 
+## :wrench: Setup
+
+Firstly, create a virtual environment and activate it:
+
+```sh
+python3.10 -m virtualenv .venv
+source .venv/bin/activate
+```
+
+To install the required dependencies, assuming you have [`poetry`] installed, run:
+> It also logs you into :hugs:Hub which prompts for your :hugs:Hub token.
+
+```sh
+make install
+```
+
+or in dev mode:
+
+```sh
+make install-dev
+```
+
+## :bar_chart: Evaluation
+
+To evaluate the model on the given TechCrunch dataset, run:
+
+```sh
+python -m llm_eval.main \
+    --model_name_or_path tiiuae/falcon-7b-instruct \
+    --max_length 512 \
+    --data_max_size 100 \
+    --num_proc 4 \
+    --batch_size 8
+```
+
 ## :technologist: Contribution
 
 You are very welcome to modify and use them in your own projects.
