@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 from transformers import AutoModelForCausalLM
 from transformers import AutoTokenizer
@@ -34,24 +35,22 @@ def get_tokenizer(
 
 def load_pipeline(
     model_name_or_path: str,
-    tokenizer_name_or_path: str | None = None,
+    tokenizer: AutoTokenizer | None = None,
 ) -> Pipeline:
     """Load a pipeline for a pretrained LLM model.
 
     Args:
         model_name_or_path (str): The name or path of the pretrained LLM model.
-        tokenizer_name_or_path (str, optional): The name or path of the tokenizer
-            to use. If None, defaults to ``model_name_or_path``.
+        tokenizer (AutoTokenizer, optional): The tokenizer to use.
+            If None, defaults to model's tokenizer.
             Defaults to None.
 
     """
-    if tokenizer_name_or_path is None:
-        tokenizer_name_or_path = model_name_or_path
 
     pipe = pipeline(
         'text-generation',
         model=model_name_or_path,
-        tokenizer=tokenizer_name_or_path,
+        tokenizer=tokenizer,
         device_map='auto',
         trust_remote_code=True,
     )
@@ -117,3 +116,8 @@ def get_save_path(
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
     return save_path
+
+
+def collator(data: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    """Collator for the dataset."""
+    return {key: [d[key] for d in data] for key in data[0]}

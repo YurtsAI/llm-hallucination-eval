@@ -4,8 +4,8 @@ from typing import Any
 
 import jsonlines
 import torch
-import tqdm
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 from transformers import AutoTokenizer
 from transformers import Pipeline
 from transformers import PreTrainedModel
@@ -35,6 +35,8 @@ def evaluate(
     if os.path.isfile(save_path):
         logging.warning(f'File {save_path} already exists. Overwriting...')
 
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
     # Generate hallucinations for each example in the dataset.
     with jsonlines.open(save_path, 'w') as writer:
         for batch in tqdm(loader, desc='Evaluating'):
@@ -46,10 +48,13 @@ def evaluate(
                     **gen_kwargs,
                 )
             else:
+                input_ids = torch.tensor(batch['input_ids'], dtype=torch.int64, device=device)
+                input_ids = input_ids.view(-1, input_ids.shape[-1])
+                logging.info(f'{input_ids.shape = }')
                 responses = generate_with_model(
                     model=model,
                     tokenizer=tokenizer,
-                    input_ids=batch['input_ids'],
+                    input_ids=input_ids,
                     **gen_kwargs,
                 )
 

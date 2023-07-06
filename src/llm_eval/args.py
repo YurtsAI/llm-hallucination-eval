@@ -85,6 +85,22 @@ class LLMArguments:
         },
     )
 
+    compute_reward: bool = field(
+        default=False,
+        metadata={'help': 'Whether to compute the reward for each example.'},
+    )
+
+    output_max_length: int = field(
+        # default=256,
+        default=512,
+        metadata={'help': 'The maximum length of the output sequence for generation.'},
+    )
+
+    output_min_length: int = field(
+        default=32,
+        metadata={'help': 'The minimum length of the output sequence for generation.'},
+    )
+
 
 def _parse_log_level(log_level: str) -> int:
     """Parse the logging level."""

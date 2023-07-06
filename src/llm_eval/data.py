@@ -107,12 +107,12 @@ def pre_process(
         if tokenizer is not None:
             example['input_ids'] = tokenizer(
                 example['prompt'],
-                return_tensors='pt',
                 max_length=max_length,
                 padding='max_length',
                 truncation=True,
+                return_tensors='pt',
                 **tokenizer_kwargs,
-            )['input_ids']
+            ).input_ids
 
         return example
     ds = ds.map(

@@ -4,6 +4,7 @@ from llm_eval.args import parse_args
 from llm_eval.data import load_data
 from llm_eval.data import pre_process
 from llm_eval.evaluate import evaluate
+from llm_eval.utils import collator
 from llm_eval.utils import get_save_path
 from llm_eval.utils import get_tokenizer
 from llm_eval.utils import load_model
@@ -19,16 +20,15 @@ def main() -> None:
     ds_is_hf_hub = len(args.dataset_name_or_path.split('/')) == 2
     model_is_hf_hub = len(args.model_name_or_path.split('/')) == 2
 
+    tokenizer = get_tokenizer(
+        tokenizer_name_or_path=args.tokenizer_name_or_path or args.model_name_or_path,
+    )
     if args.use_pipeline:
         model = load_pipeline(
             model_name_or_path=args.model_name_or_path,
-            tokenizer_name_or_path=args.tokenizer_name_or_path,
+            tokenizer=tokenizer,
         )
-        tokenizer = None
     else:
-        tokenizer = get_tokenizer(
-            tokenizer_name_or_path=args.tokenizer_name_or_path or args.model_name_or_path,
-        )
         model = load_model(
             model_name_or_path=args.model_name_or_path,
         )
@@ -53,9 +53,10 @@ def main() -> None:
 
     # Create a dataloader for the dataset.
     loader = DataLoader(
-        ds,
+        dataset=ds,
         batch_size=args.batch_size,
         shuffle=args.shuffle,
+        collate_fn=collator,
     )
 
     # Get the path to save the evaluation results.
@@ -67,6 +68,18 @@ def main() -> None:
         dataset_is_hf_hub=ds_is_hf_hub,
     )
 
+    gen_kwargs = {
+        'top_k': 50,
+        'top_p': 0.9,
+        'do_sample': True,
+        'temperature': 0.2,
+        'repetition_penalty': 1.2,
+        'min_new_tokens': args.output_min_length,
+        'max_new_tokens': args.output_max_length,
+        'pad_token_id': tokenizer.pad_token_id,
+        'eos_token_id': tokenizer.eos_token_id,
+    }
+
     # Evaluate the model on the dataset.
     evaluate(
         model=model,
@@ -75,6 +88,7 @@ def main() -> None:
         tokenizer=tokenizer,
         use_pipeline=args.use_pipeline,
         compute_reward=args.compute_reward,
+        **gen_kwargs,
     )
 
 
