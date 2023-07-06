@@ -30,13 +30,15 @@ make install-dev
 To evaluate the model on the given TechCrunch dataset, run:
 
 ```sh
-python -m llm_eval.main \
+python -m llm_eval \
     --model_name_or_path tiiuae/falcon-7b-instruct \
     --max_length 512 \
     --data_max_size 100 \
     --num_proc 4 \
     --batch_size 8
 ```
+
+> For more information, run `llm_eval --help` or `python -m llm_eval --help`.
 
 ## :technologist: Contribution
 

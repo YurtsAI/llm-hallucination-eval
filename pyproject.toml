@@ -50,6 +50,9 @@ flake8 = "^6.0.0"
 pydocstyle = {version = "^6.3.0", extras = ["tomli"]}
 docformatter = {version = "^1.7.3", extras = ["tomli"]}
 
+[tool.poetry.scripts]
+llm_eval = 'llm_eval.__main__:main'
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

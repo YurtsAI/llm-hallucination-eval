@@ -1,6 +1,6 @@
 import logging
 
-from llm_eval.args import parse_args
+from llm_eval.args import LLMArguments
 from llm_eval.data import load_data
 from llm_eval.data import pre_process
 from llm_eval.evaluate import evaluate
@@ -12,14 +12,19 @@ from llm_eval.utils import load_pipeline
 from torch.utils.data import DataLoader
 
 
-def main() -> None:
-    """Run the main function."""
-    args = parse_args()
+def _evaluate(args: LLMArguments) -> None:
+    """Run the evaluation for an LLM on a given dataset.
+
+    Args:
+        args: The arguments for the evaluation.
+
+    """
 
     # Check if the dataset and model are from HuggingFace Hub.
     ds_is_hf_hub = len(args.dataset_name_or_path.split('/')) == 2
     model_is_hf_hub = len(args.model_name_or_path.split('/')) == 2
 
+    # Load the model and tokenizer.
     tokenizer = get_tokenizer(
         tokenizer_name_or_path=args.tokenizer_name_or_path or args.model_name_or_path,
     )
@@ -68,6 +73,7 @@ def main() -> None:
         dataset_is_hf_hub=ds_is_hf_hub,
     )
 
+    # Set the keyword arguments for the generation.
     gen_kwargs = {
         'top_k': 50,
         'top_p': 0.9,
@@ -90,7 +96,3 @@ def main() -> None:
         compute_reward=args.compute_reward,
         **gen_kwargs,
     )
-
-
-if __name__ == '__main__':
-    main()

@@ -129,7 +129,7 @@ def parse_args() -> LLMArguments:
     """
     kwargs = {
         'description': 'Evaluate a pretrained LLM model on a dataset.',
-        'formatter_class': lambda prog: argparse.HelpFormatter(prog, max_help_position=80, width=200),
+        'formatter_class': lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, max_help_position=80, width=200),
     }
 
     # Parse command-line arguments.
