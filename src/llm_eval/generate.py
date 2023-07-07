@@ -2,13 +2,12 @@
 #
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
-
 from typing import Any
 
 import torch
-from transformers import PreTrainedModel
 from transformers import AutoTokenizer
 from transformers import Pipeline
+from transformers import PreTrainedModel
 
 
 def generate_with_model(

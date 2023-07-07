@@ -2,21 +2,20 @@
 #
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
-
 import logging
 import os
 from typing import Any
 
 import jsonlines
 import torch
+from llm_eval.generate import generate_with_model
+from llm_eval.generate import generate_with_pipeline
+from llm_eval.reward import t1_hallucination
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import AutoTokenizer
 from transformers import Pipeline
 from transformers import PreTrainedModel
-from llm_eval.generate import generate_with_model
-from llm_eval.generate import generate_with_pipeline
-from llm_eval.reward import t1_hallucination
 
 
 def evaluate(

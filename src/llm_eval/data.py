@@ -1,3 +1,7 @@
+# Copyright (c) 2023 Yurts AI.
+#
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
 # mypy: disable-error-code="union-attr"
 import os
 from itertools import islice

@@ -1,3 +1,8 @@
+# Copyright (c) 2023 Yurts AI.
+#
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 .PHONY: venv setup setup-dev install install-dev tidy compile clean
 
 all: setup

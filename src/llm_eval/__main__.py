@@ -1,3 +1,7 @@
+# Copyright (c) 2023 Yurts AI.
+#
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
 from llm_eval._main import _evaluate
 from llm_eval.args import parse_args
 
