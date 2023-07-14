@@ -34,6 +34,12 @@ def evaluate(
             or pipeline object.
         loader (DataLoader): The dataset to evaluate on.
         save_path (str): The path to save the evaluation results.
+        tokenizer (AutoTokenizer | None): The tokenizer to use for the model.
+            Defaults to None.
+        use_pipeline (bool): Whether to use the model as a pipeline.
+            Defaults to False.
+        compute_reward (bool): Whether to compute hallucination reward.
+            Defaults to False.
 
     Keyword Args:
         gen_kwargs (Any): Additional keyword arguments to pass to the model's

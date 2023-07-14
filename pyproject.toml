@@ -8,7 +8,6 @@ maintainers = [
   "Guruprasad Raghavan <guru@yurts.ai>",
   "Victor I. Afolabi <victor.afolabi.ctr@yurts.ai>"
 ]
-
 readme = "README.md"
 repository = "https://github.com/YurtsAI/llm-hallucination-eval"
 keywords = ["llm", "transformers", "language-models", "hallucination", "evaluation"]
@@ -41,13 +40,15 @@ jsonlines = "^3.1.0"
 tqdm = "^4.65.0"
 rich = "^13.4.2"
 einops = "^0.6.1"
+spacy = "^3.6.0"
+fastcoref = "^2.1.6"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^2.0.2"
 mypy = "^1.4.1"
 pre-commit = "^3.3.3"
 flake8 = "^6.0.0"
-pydocstyle = {version = "^6.3.0", extras = ["tomli"]}
+pydocstyle = {version = "^6.3.0", extras = ["toml"]}
 docformatter = {version = "^1.7.3", extras = ["tomli"]}
 
 [tool.poetry.scripts]
@@ -92,7 +93,7 @@ add_ignore = [
   # No blank lines allowed between a section header and its content.
   "D412",
   # Missing argument descriptions in the docstring.
-  "D417",
+  # "D417",
 ]
 
 [tool.mypy]
