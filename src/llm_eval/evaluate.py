@@ -10,6 +10,7 @@ import jsonlines
 import torch
 from llm_eval.generate import generate_with_model
 from llm_eval.generate import generate_with_pipeline
+from llm_eval.reward import get_ner
 from llm_eval.reward import t1_hallucination
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -50,6 +51,8 @@ def evaluate(
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    doc = get_ner(device=device)
+
     # Generate hallucinations for each example in the dataset.
     with jsonlines.open(save_path, 'w') as writer:
         for batch in tqdm(loader, desc='Evaluating'):
@@ -72,7 +75,7 @@ def evaluate(
 
             # Get hallucination reward for each generated response (optional).
             if compute_reward:
-                scores = t1_hallucination(batch['prompt'], responses)
+                scores = t1_hallucination(doc, batch['prompt'], responses)
                 for i, (response, score) in enumerate(zip(responses, scores)):
                     writer.write({
                         'context': batch['context'][i],
