@@ -10,6 +10,17 @@ from spacy.language import Language
 def t1_hallucination(doc: Language, prompts: list[str], responses: list[str]) -> list[float]:
     """Get the Type-1 hallucination reward for a batch of generated responses.
 
+    The algorithm is described in the blog post <https://yurts.ai/blogs/rlhf-hallucination>.
+    The Type-1 hallucination reward is defined as the number of entities in the generated
+    response that are not present in the prompt.
+
+    How it works:
+        1. For each prompt, extract the entities using the NER model.
+        2. For each generated response, extract the entities using the NER model.
+        3. For each generated response, calculate the number of entities that are not present
+              in the prompt.
+        4. Return the list of numbers.  The lower the figure, the more the model hallucinates.
+
     Args:
         doc (Language): The Named Entity Recognition model.
         prompts (list[str]): The prompts used to generate the responses.

@@ -32,12 +32,6 @@ or in dev mode:
 make install-dev
 ```
 
-Also download Spacy vocabulary:
-
-```sh
-python -m spacy download en_core_web_trf
-```
-
 ## :bar_chart: Evaluation
 
 To evaluate the model on the given TechCrunch dataset, run:

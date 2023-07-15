@@ -15,6 +15,7 @@ install:
 	# pip install --upgrade poetry
 	# poetry install -E all
 	pip install -r requirements.txt
+	python -m spacy download en_core_web_trf
 	# Hacky way to make sure HF cli exists.
 	pip install --upgrade "huggingface_hub[cli]"
 	huggingface-cli login		# login to huggingface
@@ -24,6 +25,7 @@ install-dev:
 	# pip install --upgrade poetry
 	# poetry install --with dev -E all
 	pip install -r requirements-dev.txt
+	python -m spacy download en_core_web_trf
 	# Hacky way to make sure HF cli exists.
 	pip install --upgrade "huggingface_hub[cli]"
 	huggingface-cli login		# login to huggingface
