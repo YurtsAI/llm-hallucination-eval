@@ -7,7 +7,7 @@ import spacy
 from spacy.language import Language
 
 
-def t1_hallucination(doc: Language, prompts: list[str], responses: list[str]) -> list[float]:
+def t1_hallucination(model: Language, prompts: list[str], responses: list[str]) -> list[float]:
     """Get the Type-1 hallucination reward for a batch of generated responses.
 
     The algorithm is described in the blog post <https://yurts.ai/blogs/rlhf-hallucination>.
@@ -22,7 +22,7 @@ def t1_hallucination(doc: Language, prompts: list[str], responses: list[str]) ->
         4. Return the list of numbers.  The lower the figure, the more the model hallucinates.
 
     Args:
-        doc (Language): The Named Entity Recognition model.
+        model (Language): The Named Entity Recognition model.
         prompts (list[str]): The prompts used to generate the responses.
         responses (list[str]): The generated responses.
 
@@ -30,32 +30,38 @@ def t1_hallucination(doc: Language, prompts: list[str], responses: list[str]) ->
         list[float]: The hallucination reward for each generated response.
 
     """
+    # Get the entities for each prompt.
     prompt_entities = [
-        {item.text.lower() for item in doc(prompt).ents}
+        {item.text.lower() for item in model(prompt).ents}
         for prompt in prompts
     ]
 
+    # Get the entities for each generated response.
     model_entities = [
-        {item.text.lower() for item in doc(response).ents}
+        {item.text.lower() for item in model(response).ents}
         for response in responses
     ]
+
+    # Calculate the hallucination reward for each generated response.
     rewards = []
 
     for prompt, prompt_entity, model_entity in zip(
         prompts, prompt_entities, model_entities,
     ):
-        score, flag = 0, 0
+        score, is_hallucinating = 0, False
 
+        # Generated response has no entities.
         if len(model_entity) == 0:
-            score = 0
-            flag = 1
+            is_hallucinating = True  # Neutral
 
+        # Check if the entities in the generated response are present in the prompt.
         for entity in model_entity:
             if entity not in prompt_entity and entity not in prompt.lower():
-                score += 1
-                flag = 1
+                score += -1
+                is_hallucinating = True
 
-        if flag == 0:
+        # No hallucination found.
+        if not is_hallucinating:
             score = 1
 
         rewards.append(float(score))

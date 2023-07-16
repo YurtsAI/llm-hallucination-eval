@@ -51,7 +51,7 @@ def evaluate(
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    doc = get_ner(device=device)
+    ner_model = get_ner(device=device)
 
     # Generate hallucinations for each example in the dataset.
     with jsonlines.open(save_path, 'w') as writer:
@@ -75,7 +75,7 @@ def evaluate(
 
             # Get hallucination reward for each generated response (optional).
             if compute_reward:
-                scores = t1_hallucination(doc, batch['prompt'], responses)
+                scores = t1_hallucination(ner_model, batch['prompt'], responses)
                 for i, (response, score) in enumerate(zip(responses, scores)):
                     writer.write({
                         'context': batch['context'][i],
