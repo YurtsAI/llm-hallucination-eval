@@ -51,7 +51,7 @@ def _evaluate(args: LLMArguments) -> None:
     ds = pre_process(
         ds=ds,
         prompt_format=args.prompt_format,
-        token_format=args.special_token_format,
+        input_format=args.input_format,
         tokenizer=tokenizer,
         max_length=args.max_length,
         num_proc=args.num_proc,

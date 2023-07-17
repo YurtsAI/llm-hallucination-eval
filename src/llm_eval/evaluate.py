@@ -80,6 +80,9 @@ def evaluate(
                     **gen_kwargs,
                 )
 
+                # Free up memory.
+                input_ids = None
+
             # Get hallucination reward for each generated response (optional).
             if compute_reward:
                 scores = t1_hallucination(ner_model, batch['prompt'], responses)

@@ -65,7 +65,7 @@ def load_data(
 def pre_process(
     ds: Dataset,
     prompt_format: str | None = None,
-    token_format: str | None = None,
+    input_format: str | None = None,
     tokenizer: AutoTokenizer | None = None,
     max_length: int = 1024,
     num_proc: int | None = None,
@@ -77,7 +77,7 @@ def pre_process(
         ds (Dataset): The dataset to add the prompt to.
         prompt_format (str, optional): The prompt to add to the context.
             Defaults to ``DEFAULT_PROMPT``.
-        token_format (str, optional): The format of the prompt to use for the LLM.
+        input_format (str, optional): The format of the prompt to use for the LLM.
             Defaults to None.
         tokenizer (AutoTokenizer, optional): The tokenizer to use to tokenize the
             prompt.
@@ -102,8 +102,8 @@ def pre_process(
         example['prompt'] = prompt_format.format(example['context'], example['question'])
 
         # Add special tokens to the NL prompt.
-        if token_format is not None:
-            example['prompt'] = token_format.format(example['prompt'])
+        if input_format is not None:
+            example['prompt'] = input_format.format(example['prompt'])
         else:
             example['prompt'] = f'{example["prompt"]}\nAnswer: '
 
@@ -130,6 +130,6 @@ if __name__ == '__main__':
     ds = load_data('res/data/tech-crunch.jsonl')
     print(ds)
 
-    ds = pre_process(ds, token_format='<|prompter|>{}<|endoftext|><|assistant|>')
+    ds = pre_process(ds, input_format='<|prompter|>{}<|endoftext|><|assistant|>')
     print(ds)
     print(ds[0])

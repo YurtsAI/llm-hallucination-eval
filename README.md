@@ -42,10 +42,27 @@ python -m llm_eval \
     --max_length 512 \
     --data_max_size 100 \
     --num_proc 4 \
-    --batch_size 8
+    --batch_size 8 \
+    --compute_reward
 ```
 
 > For more information, run `llm_eval --help` or `python -m llm_eval --help`.
+
+Some models have different input formatting, i.e addition of special token or
+formatted in certain ways. To handle this, you can use the `--input_format`
+flag. For example, to preprocess the input for the
+`OpenAssistant/falcon-7b-sft-mix-2000` model, run:
+
+```sh
+python -m llm_eval \
+    --model_name_or_path OpenAssistant/falcon-7b-sft-mix-2000 \
+    --data_max_size 100 \
+    --input_format "<|prompter|>{}<|endoftext|><|assistant|>" \
+    --batch_size 8 \
+    --shuffle \
+    --max_length 512 \
+    --compute_reward
+```
 
 ## :technologist: Contribution
 

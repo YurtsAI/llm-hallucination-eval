@@ -61,9 +61,9 @@ class LLMArguments:
         metadata={'help': 'The format of the prompt to use for the LLM.'},
     )
 
-    special_token_format: str | None = field(
+    input_format: str | None = field(
         default=None,
-        metadata={'help': 'The format of the special tokens to use for the LLM.'},
+        metadata={'help': 'The format of the input to use for the LLM.'},
     )
 
     max_length: int = field(
