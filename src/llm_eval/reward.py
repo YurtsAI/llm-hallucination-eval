@@ -28,15 +28,18 @@ def t1_hallucination(model: Language, prompts: list[str], responses: list[str]) 
         list[float]: The hallucination reward for each generated response.
 
     """
+    component_cfg = {
+        'fastcoref': {'resolve_text': True},
+    }
     # Get the entities for each prompt.
     prompt_entities = [
-        {item.text.lower() for item in model(prompt).ents}
+        {item.text.lower() for item in model(prompt, component_cfg=component_cfg).ents}
         for prompt in prompts
     ]
 
     # Get the entities for each generated response.
     model_entities = [
-        {item.text.lower() for item in model(response).ents}
+        {item.text.lower() for item in model(response, component_cfg=component_cfg).ents}
         for response in responses
     ]
 
