@@ -2,8 +2,6 @@
 #
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
-# mypy: disable-error-code="attr-defined"
-import spacy
 from spacy.language import Language
 
 
@@ -66,21 +64,3 @@ def t1_hallucination(model: Language, prompts: list[str], responses: list[str]) 
 
         rewards.append(float(score))
     return rewards
-
-
-def get_ner(device: str = 'cuda') -> spacy.language.Language:
-    """Get the Named Entity Recognition (NER) model.
-
-    Args:
-        device (str, optional): The device to use for the NER model.
-            Defaults to "cuda".
-
-    Returns:
-        spacy.language.Language: The NER model.
-
-    """
-    device = device or 'cpu'
-    if device != 'cpu':
-        spacy.prefer_gpu()
-
-    return spacy.load('en_core_web_trf')

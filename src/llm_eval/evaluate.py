@@ -2,15 +2,16 @@
 #
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
+# mypy: disable-error-code="attr-defined"
 import logging
 import os
 from typing import Any
 
 import jsonlines
+import spacy
 import torch
 from llm_eval.generate import generate_with_model
 from llm_eval.generate import generate_with_pipeline
-from llm_eval.reward import get_ner
 from llm_eval.reward import t1_hallucination
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -49,9 +50,15 @@ def evaluate(
     if os.path.isfile(save_path):
         logging.warning(f'File {save_path} already exists. Overwriting...')
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # Set the device to use.
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+        spacy.prefer_gpu()
+    else:
+        device = torch.device('cpu')
 
-    ner_model = get_ner(device=device)
+    # Load the NER model.
+    ner_model = spacy.load('en_core_web_trf')
 
     # Generate hallucinations for each example in the dataset.
     with jsonlines.open(save_path, 'w') as writer:
