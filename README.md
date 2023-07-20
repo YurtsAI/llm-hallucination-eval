@@ -78,20 +78,26 @@ python -m llm_eval \
 If you'd like further data exploration, you can use `pandas` or your
 favorite data analysis library to visualize the data.
 
+> If you're not familiar with `pandas`, you can use the following snippet.
+> Make sure to `pip install pandas` first.
+
 ```python
 >>> import pandas as pd
 
 >>> # Load the data to a pandas dataframe.
 >>> df = pd.read_json('res/eval/tech-crunch_falcon-7b-instruct.jsonl', lines=True)
 
->>> # Get the number of good, neutral, and bad responses.
->>> good = df.reward == 1
->>> neutral = df.reward == 0
->>> bad = df.reward < 0
+>>> # Filter Type-1 hallucinations.
+>>> good = df[df.reward == 1]
+>>> neutral = df[df.reward == 0]
+>>> bad = df[df.reward < 0]
 
->>> print(f'Good: {good.sum()} ({len(good) / len(df):.2%})')
->>> print(f'Neutral: {neutral.sum()} ({len(neutral) / len(df):.2%})')
->>> print(f'Bad: {bad.sum()} ({len(bad) / len(df):.2%})')
+>>> # Get the number of good, neutral, and bad responses.
+>>> n, n_good, n_neutral, n_bad = len(df), len(good), len(neutral), len(bad)
+
+>>> print(f'Good: {n_good} ({n_good / n:.2%})')
+>>> print(f'Neutral: {n_neutral} ({n_neutral / n:.2%})')
+>>> print(f'Bad: {n_bad} ({n_bad / n:.2%})')
 ```
 
 You're welcome to submit a [pull request] with your visualizations!
