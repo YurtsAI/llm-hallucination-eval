@@ -85,7 +85,7 @@ favorite data analysis library to visualize the data.
 >>> import pandas as pd
 
 >>> # Load the data to a pandas dataframe.
->>> df = pd.read_json('res/eval/tech-crunch_falcon-7b-instruct.jsonl', lines=True)
+>>> df = pd.read_json('res/eval/falcon-7b-instruct_tech-crunch.jsonl', lines=True)
 
 >>> # Filter Type-1 hallucinations.
 >>> good = df[df.reward == 1]
