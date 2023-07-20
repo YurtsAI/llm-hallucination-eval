@@ -56,3 +56,4 @@ dmypy.json
 # Project specific
 res/*
 !res/data
+!res/images

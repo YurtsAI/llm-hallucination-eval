@@ -2,7 +2,7 @@
 #
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
-# mypy: disable-error-code="attr-defined"
+# mypy: disable-error-code="attr-defined, assignment"
 import logging
 import os
 from typing import Any
