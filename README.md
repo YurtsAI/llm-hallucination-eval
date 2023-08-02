@@ -121,7 +121,7 @@ These images are included under the "fair usage" laws.
 [`poetry`]: https://python-poetry.org/docs/
 [tech-crunch]: https://techcrunch.com/
 [yurtsai]: https://yurts.ai/
-[blog]: https://yurts.ai/blog/
+[blog]: https://medium.com/yurts/illusions-unraveled-the-magic-and-madness-of-hallucinations-in-llms-part-1-61d988e704b
 [hf-token]: https://huggingface.co/docs/hub/security-tokens/
 [eval-pipeline]: ./res/images/eval-pipeline.png
 [pull request]: https://github.com/YurtsAI/llm-hallucination-eval/pulls
