@@ -9,7 +9,7 @@
 
 [YurtsAI][yurtsai] developed a pipeline to evaluate the famous hallucination
 problem of large language models.
-Refer to [Reward engineering coupled with RLHF to reduce LLM hallucinations][blog]
+Refer to [Illusions Unraveled: The Magic and Madness of Hallucinations in LLMs — Part 1][blog]
 to learn more about hallucinations and the evaluation pipeline.
 
 ![Evaluation Pipeline][eval-pipeline]
